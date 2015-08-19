@@ -1,0 +1,177 @@
+#include <iostream>
+#include <conio.h>
+#include <time.h>
+
+using namespace std;
+
+char *w[][6] = {
+	{ "v1", "o1", "o2", "PO", "o4", "c" },
+	{ "v2", "PO", "o2", "o3", "o4", "a" },
+	{ "v3", "o1", "PO", "o3", "o4", "b" },
+	{ "v4", "o1", "o2", "PO", "o4", "c" },
+	{ "v5", "o1", "o2", "o3", "PO", "d" },
+};
+bool can5050 = true;
+bool canpD = true;
+bool canpZ = true;
+
+
+char question(int x);
+void podsk5050(int x);
+void pomDr(int x);
+void pomZ(int x);
+
+
+void main(){
+	setlocale(LC_ALL, "Russian");
+	srand(time(0));
+	bool prav = true;
+	char otv, rOtv;
+	int x = 0;
+	do{
+		rOtv = question(x);
+		cout << "\nВыберете букву правильного ответа: ";
+		cin >> otv;
+		if (otv != rOtv){
+			prav = false;
+			cout << "\nВы проиграли!" << endl;
+			break;
+		}			
+		x++;
+		if (x == 5)
+			cout << "\nПоздравляем! Вы выиграли!" << endl;
+	} while (prav && x < 5);
+
+	_getch();
+}
+
+char question(int x){
+	int choice = 0;
+	int nP;
+
+	cout << endl << w[x][0] << endl;
+	cout <<"a)" << w[x][1] << "\t" <<"b)" << w[x][2] << endl;
+	cout << "c)" << w[x][3] << "\t" << "d)" << w[x][4] << endl << endl;
+	if (can5050 || canpD || canpZ){
+		cout << "Вам нужна подсказка? 1 - Да 0 - Нет\t";
+		cin >> choice;
+		if (choice){
+			cout << "\nВыберете подсказку: \n";
+			if (can5050)
+				cout << "1.50/50\t";
+			if (canpD)
+				cout << "\t2.Помощь друга\t";
+			if (canpZ)
+				cout << "\t3.Помощь зала\t";
+			cin >> nP;
+			switch (nP){
+			case 1:
+				if (can5050)
+					podsk5050(x);
+				else
+					cout << "\nУ вас нет этой подсказки.\n";
+				can5050 = false;
+				break;
+			case 2:
+				if (canpD)
+					pomDr(x);
+				else
+					cout << "\nУ вас нет этой подсказки.\n";
+				canpD = false;
+				break;
+			case 3:
+				if (canpZ)
+					pomZ(x);
+				else
+					cout << "\nУ вас нет этой подсказки.\n";
+				canpZ = false;
+				break;
+			default:
+				cout << "\nУ вас нет этой подсказки.\n";
+				break;
+			}
+		}
+	}
+	return *w[x][5];
+}
+
+void podsk5050(int x){
+	char rightAnswer = *w[x][5];
+	int s;
+	char c;
+	cout << endl << w[x][0] << endl;
+	do{
+		s = 1 + rand() % 4;
+		switch (s){
+		case 1: c = 'a'; break;
+		case 2: c = 'b'; break;
+		case 3: c = 'c'; break;
+		case 4: c = 'd'; break;
+		}
+	} while (c == rightAnswer);
+	cout << "a)";
+	if (rightAnswer == 'a' || c == 'a')
+		cout << w[x][1];
+	else
+		cout << "---";
+	cout << "\tb)";
+	if (rightAnswer == 'b' || c == 'b')
+		cout << w[x][2];
+	else
+		cout << "---";
+
+	cout << endl;
+	cout << "c)";
+	if (rightAnswer == 'c' || c == 'c')
+		cout << w[x][3];
+	else
+		cout << "---";
+	cout << "\td)";
+	if (rightAnswer == 'd' || c == 'd')
+		cout << w[x][4];
+	else
+		cout << "---";
+
+}
+
+void pomDr(int x){
+	char rightAnswer = *w[x][5];
+	char c;
+	int s;
+	int r = rand() % 100;
+	if (r < 80)
+		cout << "\nПравильный ответ - " << rightAnswer << endl;
+	else {
+		do{
+			s = 1 + rand() % 4;
+			switch (s){
+			case 1: c = 'a'; break;
+			case 2: c = 'b'; break;
+			case 3: c = 'c'; break;
+			case 4: c = 'd'; break;
+			}
+		} while (c == rightAnswer);
+		cout << "\nПравильный ответ - " << c << endl;
+	}
+}
+
+void pomZ(int x){
+	char rightAnswer = *w[x][5];
+	char c;
+	int s;
+	int r = rand() % 100;
+	if (r < 70)
+		cout << "\nПравильный ответ - " << rightAnswer << endl;
+	else {
+		do{
+			s = 1 + rand() % 4;
+			switch (s){
+			case 1: c = 'a'; break;
+			case 2: c = 'b'; break;
+			case 3: c = 'c'; break;
+			case 4: c = 'd'; break;
+			}
+		} while (c != rightAnswer);
+		cout << "\nПравильный ответ - " << c << endl;
+	}
+}
