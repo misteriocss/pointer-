@@ -1,0 +1,91 @@
+#include <iostream>
+#include <conio.h>
+
+using namespace std;
+
+struct Tire{
+	int radius;
+};
+
+struct Weel{
+	Tire pokrishka;
+};
+
+struct Auto{
+	float benzin;
+	float probeg;
+	Weel kolesa[4];
+	Auto *next;
+};
+
+
+void go(Auto &a, int km){
+	cout <<  endl << "Проехали " << km << "км."  << endl;
+	a.benzin -= (km / 100.0) * 7;
+	a.probeg += km;
+}
+
+void display(Auto a){
+	cout <<"Бензин: " << a.benzin << endl;
+	cout << "Пробег: " << a.probeg << endl << endl;
+}
+
+void zapravka(Auto &a, int n){
+	cout << endl << "Заправляемся..." << endl;
+	a.benzin += n;
+	cout << "Заправили " << n << " литров" << endl << endl;
+}
+
+void gonaz(Auto &a, int km){
+	cout << endl << "Проехали назад " << km << " км." << endl;
+	a.benzin -= (km / 100.0) * 7;
+	a.probeg -= km;
+}
+
+void Add(Auto &a, Auto* &llast){
+	a.next = llast;
+	llast = &a;
+}
+void displayo(Auto *temp){
+	while (temp != NULL){
+		cout << temp->probeg << endl;
+		temp = temp->next;
+	}
+}
+
+Auto* getFirst(Auto * temp){
+	if (temp == NULL)
+		return NULL;
+	Auto *p = NULL;
+	while (temp->next != NULL){
+		p = temp;
+		temp = temp->next;
+	}
+	if (p != NULL)
+		p->next = NULL;
+	return temp;
+}
+
+void main(){
+	setlocale(LC_ALL, "Russian");
+	Auto *last = NULL;
+	Auto a;
+	a.probeg = 100;
+	Auto b;
+	b.probeg = 200;
+	Auto c;
+	c.probeg = 300;
+	Add(a, last);
+	Add(b, last);
+	Add(c, last);
+	Auto *temp = last;
+
+	displayo(temp);
+
+	cout << "@@@@" << endl;
+
+	getFirst(temp);
+	cout << "!!!" << endl;
+	displayo(temp);
+	_getch();
+}
