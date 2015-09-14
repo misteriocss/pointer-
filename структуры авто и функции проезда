@@ -1,0 +1,74 @@
+#include <iostream>
+#include <conio.h>
+
+using namespace std;
+
+struct Tire{
+	int radius;
+};
+
+struct Weel{
+	Tire pokrishka;
+};
+
+struct Auto{
+	float benzin;
+	float probeg;
+	Weel kolesa[4];
+};
+
+void go1(Auto *a, int km){   //ехать вперед
+	cout << endl << "Проехали " << km << "км." <<  endl;
+	a->benzin -= (km / 100.0) * 7;
+	a->probeg += km;
+}
+
+void go2(Auto &a, int km){
+	cout <<  endl << "Проехали " << km << "км."  << endl;
+	a.benzin -= (km / 100.0) * 7;
+	a.probeg += km;
+}
+
+Auto go3(Auto a, int km){
+	cout << endl << "Проехали " << km << "км." << endl;
+	a.benzin -= (km / 100.0) * 7;
+	a.probeg += km;
+	return a;
+}
+
+void display(Auto a){
+	cout <<"Бензин: " << a.benzin << endl;
+	cout << "Пробег: " << a.probeg << endl << endl;
+}
+
+void zapravka(Auto &a, int n){
+	cout << endl << "Заправляемся..." << endl;
+	a.benzin += n;
+	cout << "Заправили " << n << " литров" << endl << endl;
+}
+
+void gonaz(Auto &a, int km){
+	cout << endl << "Проехали назад " << km << " км." << endl;
+	a.benzin -= (km / 100.0) * 7;
+	a.probeg -= km;
+}
+
+void main(){
+	setlocale(LC_ALL, "Russian");
+	Auto a;
+	a.kolesa[2].pokrishka.radius = 17;
+	a.benzin = 50.07;
+	a.probeg = 0;
+	display(a);
+	go1(&a, 100);
+	display(a);
+	go2(a, 200);
+	display(a);
+	a = go3(a, 300);
+	display(a);
+	zapravka(a, 50);
+	display(a);
+	gonaz(a, 5);
+	display(a);
+	_getch();
+}
