@@ -1,0 +1,130 @@
+#include <iostream>
+#include <conio.h>
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+struct User{
+	char* login;
+	char* pass;
+	int inbox;
+};
+
+void saveUsers();
+User* loadUsers();
+User* chkLP(char*, char *);
+
+
+void main(){
+	setlocale(LC_ALL, "Russian");
+	int x;
+	char *login = new char[200];
+	char *pass = new char[200];
+	cout << "Выберете действие:\n";
+	cout << "1) Создать 5 пользователей и записать в файл\n";
+	cout << "2) Показать на экран всех пользователей\n";
+	cout << "3) спроситьь  логин и пароль, найти и показать кол-во входящих сообщений если совпало\n";
+	cout << "4) exit\n";
+	cin >> x;
+	switch (x){
+		case 1:
+		{
+				  saveUsers();
+			break;
+		}
+		case 2:
+		{
+				  User *users = loadUsers();
+				  for (int i = 0; i < 5; i++){
+					  cout << users[i].login;
+					  cout << users[i].pass;
+					  cout << users[i].inbox << endl << endl;
+				  }
+				  break;
+		}
+		case 3:
+		{
+				 
+				  /*cout << "input login\n";
+				  cin >> login;
+				  cout << "input password\n";
+				  cin >> pass;*/
+				  User *oneUser = chkLP("admin@tut.by", "admin");
+				  if (oneUser)
+					  cout << "Количество писем - " << oneUser->inbox << endl;
+				  else
+					  cout << "Нет такого пользователя." << endl;
+
+		}
+		case 4:{
+				   break; }
+		default:{
+					cout << "\nНеправильный ввод!";
+					break; }
+	}
+	_getch();
+}
+
+void saveUsers(){
+	User m[5];
+	m[0].login = "UUU"; m[0].pass = "UUU"; m[0].inbox = 25;
+	m[1].login = "Stas"; m[1].pass = "12345"; m[1].inbox = 2;
+	m[2].login = "Nebo"; m[2].pass = "qwerty"; m[2].inbox = 13;
+	m[3].login = "admin@tut.by"; m[3].pass = "admin"; m[3].inbox = 55;
+	m[4].login = "qwerty"; m[4].pass = "df1g"; m[4].inbox = 10;
+
+	char *temp = new char[20];
+	FILE *f = fopen("users.txt", "w");
+	for (int i = 0; i < 5; i++){
+		fputs(m[i].login, f); fputs("\n", f);
+		fputs(m[i].pass, f); fputs("\n", f);
+		fputs(itoa(m[i].inbox, temp, 10), f); fputs("\n", f);
+	}
+	fclose(f);
+}
+
+User* loadUsers(){
+	User *m = new User[5];
+	FILE *f = fopen("users.txt", "r");
+	char *buffer = new char[200];
+	for (int i = 0; i < 5; i++){
+		fgets(buffer, 200, f);
+		m[i].login = new char[strlen(buffer) + 1];
+		strcpy(m[i].login, buffer);
+
+		fgets(buffer, 200, f);
+		m[i].pass = new char[strlen(buffer) + 1];
+		strcpy(m[i].pass, buffer);
+
+		fgets(buffer, 200, f);
+		m[i].inbox = atoi(buffer);
+	}
+	fclose(f);
+	return m;
+}
+
+User* chkLP(char* login, char* pass){
+	FILE *f = fopen("users.txt", "r");
+	char *buffer = new char[200];
+	for (int i = 0; i < 5; i++){
+		fgets(buffer, 200, f); //читаем первую строку
+		if (strncmp(buffer, login, strlen(login)) == 0){
+			User *r = new User;
+			r->login = new char[strlen(buffer)];
+			strncpy(r->login, buffer, strlen(buffer));
+			fgets(buffer, 200, f); 
+			r->pass = new char[strlen(buffer)];
+			strncpy(r->pass, buffer, strlen(buffer));
+			if (strncmp(buffer, pass, strlen(pass)) != 0)
+				return NULL;
+			r->inbox = atoi(fgets(buffer, 200, f));
+			fclose(f);
+			return r;
+		}
+		fgets(buffer, 200, f);    //впустсую читаем две строки
+		fgets(buffer, 200, f);
+	}
+	fclose(f);
+	return NULL;
+}
