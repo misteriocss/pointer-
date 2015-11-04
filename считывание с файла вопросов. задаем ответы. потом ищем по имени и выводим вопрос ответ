@@ -1,0 +1,58 @@
+#include <iostream>
+#include <conio.h>
+
+using namespace std;
+
+const char* fileType = ".usr";
+
+void SaveUser(){
+	FILE *f = fopen("q.txt", "r");
+	char *buffer = new char[100];
+	char *a = new char[100];
+	char *fileName = new char[100]; //имя файла для пользователя
+	fgets(buffer, 100, f); // читаем первый вопрос про имя
+	cout << buffer;
+	cin >> a;
+	strcpy(fileName, a);
+	strcat(fileName, fileType);
+	FILE *userFile = fopen(fileName, "w");
+	fputs(a, userFile);
+	fputs("\n", userFile);
+	while (fgets(buffer, 100, f) != NULL){
+		cout << buffer;
+		cin >> a;
+		fputs(a, userFile);
+		fputs("\n", userFile);
+	}
+	fclose(f);
+	fclose(userFile);
+}
+
+void loadUser(char* userName){
+	//допустим мы уверены что человек с именем Иванов уже сохранен
+	//откройте два файла для чтения 1) файл вопросов и 2)файл иванов.ткст
+	//читать их построчно и выводить на экран вопрос/ответ
+	char *fileName = new char[100];
+	char *bufferQ = new char[100];
+	char *bufferA = new char[100];
+	FILE *Q = fopen("q.txt", "r");
+	strcpy(fileName, userName);
+	strcat(fileName, fileType);
+	FILE *A = fopen(fileName, "r");
+	if (A == NULL){ // если такого файла нет
+		cout << "Пользователя " << userName << " нет." << endl;
+		return;
+	}
+	while ((fgets(bufferQ, 100, Q) != NULL) && (fgets(bufferA, 100, A) != NULL)){
+		cout << bufferQ;
+		cout << bufferA;
+	}
+}
+
+void main(){
+	setlocale(LC_ALL, "Russian");
+	//SaveUser();
+	loadUser("username");
+	loadUser("qwerty");
+	_getch();
+}
